@@ -15,10 +15,10 @@ struct QTree
 {
     union
     {
-        struct { QTREE *leaf[LEAF]; } l;
+        QTREE *leaf[LEAF];
         // nodes of level 0 could represent real cells
-        struct { int bits; } b;
-    } u;
+        int bits;
+    } data;
     int level;
 };
 

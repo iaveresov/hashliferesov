@@ -11,7 +11,7 @@ QTREE *QTree_init(int depth)
     QTREE *tree, *leaf;
 
     tree = (QTREE *)malloc(sizeof(QTREE));
-    tree->u.b.bits = 0;
+    tree->data.bits = 0;
     tree->level = 0;
 
     for (int l = 1; l < depth; l++)
@@ -21,7 +21,7 @@ QTREE *QTree_init(int depth)
         tree->level = l;
         for (int i = 0; i < LEAF; i++)
         {
-            tree->u.l.leaf[i] = leaf;
+            tree->data.leaf[i] = leaf;
         }
     }
 
@@ -41,10 +41,10 @@ void _print_impl(QTREE *root, int tabs, int x, int y, int limit)
             }
             printf("%d: ", i);
 
-            const int size = 1 << root->u.l.leaf[i]->level;
+            const int size = 1 << root->data.leaf[i]->level;
             const int _x = x + size * (i % 2);
             const int _y = y + size * (i > 1);
-            _print_impl(root->u.l.leaf[i], tabs + 1, _x, _y, limit);
+            _print_impl(root->data.leaf[i], tabs + 1, _x, _y, limit);
         }
     }
 }
