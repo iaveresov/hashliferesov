@@ -7,8 +7,15 @@
 
 #include "quadrotree.h"
 #include "args.h"
+#include "hash.h"
 
 #define CMP(str, arg) (memcmp(str, arg, sizeof(str)) == 0)
+
+size_t hash_fn(KEY key)
+{
+    return (size_t)(key % TABLE_SIZE);
+}
+
 
 void usage(char *name)
 {
@@ -21,6 +28,7 @@ void usage(char *name)
 
 int main(int argc, char **argv)
 {
+
     if (argc < 2)
     {
         goto error;
@@ -43,10 +51,24 @@ int main(int argc, char **argv)
             }
         }
 
+
         QTREE *tree = QTree_init(depth);
         QTree_print(tree, limit);
         // QTree_free(tree);
-    } else {
+    }
+    else if (CMP("hash", argv[1]))
+    {
+        HASH *hash = Hash_init(&hash_fn);
+        int *value = (int *)malloc(sizeof(int));
+        *value = 1600;
+        Hash_insert(hash, 1337, value);
+        printf("%d\n", *(int *)Hash_get(hash, 1337));
+        int sval = 2000;
+        Hash_insert(hash, 5433, &sval);
+        printf("%d\n", *(int *)Hash_get(hash, 5433));
+        printf("%d\n", *(int *)Hash_get(hash, 1337));
+    }
+    else {
         goto error;
     }
     return 0;

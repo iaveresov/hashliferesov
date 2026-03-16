@@ -22,12 +22,19 @@ void List_prepend(LIST **list, void *value)
 
 void *List_search(LIST *list, bool (*predicate)(void *element, void *load), void *load)
 {
+    if (!list)
+    {
+        return NULL;
+    }
+
     do {
-        if (!list || predicate(list, load))
+        if (predicate(list->value, load))
         {
-            return list;
+            return list->value;
         }
         list = list->next;
-    } while (1);
+    } while (list);
+
+    return NULL;
 }
 
