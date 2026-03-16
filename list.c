@@ -22,30 +22,12 @@ void List_prepend(LIST **list, void *value)
 
 void *List_search(LIST *list, bool (*predicate)(void *element, void *load), void *load)
 {
-    if (!list)
-    {
-        return NULL;
-    }
-
-    if (predicate(list, load))
-    {
-        return list;
-    }
-
-    while (list->next)
-    {
-        if (predicate(list, load))
+    do {
+        if (!list || predicate(list, load))
         {
             return list;
         }
         list = list->next;
-    }
-
-    return NULL;
+    } while (1);
 }
-
-void List_remove(LIST *list, void *element);
-
-void List_free(LIST *list);
-
 
