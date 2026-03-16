@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include "quadrotree.h"
+#include "hash.h"
 
 QTREE *QTree_init(int depth)
 {
