@@ -1,10 +1,11 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <stdio.h>
+
 #include "hash.h"
 #include "list.h"
 
-static void* ecalloc(size_t nmemb, size_t size)
+static void *ecalloc(size_t nmemb, size_t size)
 {
     void *ptr = calloc(nmemb, size); 
     if (!ptr)

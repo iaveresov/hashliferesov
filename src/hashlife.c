@@ -11,12 +11,6 @@
 
 #define CMP(str, arg) (memcmp(str, arg, sizeof(str)) == 0)
 
-size_t hash_fn(KEY key)
-{
-    return (size_t)(key % TABLE_SIZE);
-}
-
-
 void usage(char *name)
 {
     printf(
@@ -56,17 +50,10 @@ int main(int argc, char **argv)
         QTree_print(tree, limit);
         // QTree_free(tree);
     }
-    else if (CMP("hash", argv[1]))
-    {
-        HASH *hash = Hash_init(&hash_fn);
-        int *value = (int *)malloc(sizeof(int));
-        *value = 1600;
-        Hash_insert(hash, 1337, value);
-        printf("%d\n", *(int *)Hash_get(hash, 1337));
-        int sval = 2000;
-        Hash_insert(hash, 5433, &sval);
-        printf("%d\n", *(int *)Hash_get(hash, 5433));
-        printf("%d\n", *(int *)Hash_get(hash, 1337));
+    else if (CMP("test", argv[1]))
+    {   
+        //TODO: write tests for hashtable
+        return 0;    
     }
     else {
         goto error;
