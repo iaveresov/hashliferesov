@@ -5,8 +5,6 @@
 
 typedef struct List LIST;
 
-LIST *List_init(void);
-
 void List_prepend(LIST **list, void *value);
 
 void *List_search(LIST *list, bool (*predicate)(void *element, void *load), void *load);

@@ -7,11 +7,6 @@ struct List
     LIST *next;
 };
 
-LIST *List_init(void)
-{
-    return (LIST *)malloc(sizeof(LIST));
-}
-
 void List_prepend(LIST **list, void *value)
 {
     LIST *node = malloc(sizeof(LIST));
