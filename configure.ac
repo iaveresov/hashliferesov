@@ -1,4 +1,4 @@
-AC_INIT([hashlife], [0.0.1])
+AC_INIT([hashliferesov], [0.0.1])
 AM_INIT_AUTOMAKE([gnu])
 AC_PROG_CC
 AC_CONFIG_HEADERS([config.h])

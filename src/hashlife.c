@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "args.h"
+#include "config.h"
 #include "hash.h"
 #include "quadrotree.h"
 #include "typedefs.h"
@@ -16,14 +17,14 @@ void
 usage (char *name)
 {
   printf ("usage:\n"
-          "\t%s init DEPTH [LIMIT]\n",
-          name);
+          "\t%s init DEPTH [LIMIT]\n"
+          "\t%s --version|-v\n"
+          , name, name);
 }
 
 int
 main (int argc, char **argv)
 {
-
   if (argc < 2)
     {
       goto error;
@@ -52,12 +53,12 @@ main (int argc, char **argv)
       HASH *hash = Hash_init (&QTree_hash);
       QTREE *tree = QTree_init (depth, hash);
       QTree_print (tree, limit);
-      printf("hash size: %lu\n", Hash_size(hash));
+      printf ("hash size: %lu\n", Hash_size (hash));
       // QTree_free(tree);
     }
-  else if (CMP ("test", argv[1]))
+  else if (CMP ("--version", argv[1]) || CMP ("-v", argv[1]))
     {
-      // TODO: write tests for hashtable
+      printf ("%s\n", PACKAGE_STRING);
       return 0;
     }
   else
