@@ -23,59 +23,48 @@ Plaintext_read (char *path)
     }
 
   char *line = (char *)malloc (PLAINTEXT_BUF_SIZE);
-  size_t linenum = 0;
-  size_t max_line_len = 0;
-  size_t current_line_len = 0;
-  bool trail = false;
-  bool pattern = false;
+  size_t width = 0,     /* max length of line in pattern file */
+         height = 0;    /* number of pattern file lines excluding comments */
+  size_t length = 0, read;
+  char *ptr, c;
+  bool in_string = false;
+  bool in_comment = false;
   // size_t pattern_begin = 0; /* seek point */
 
-  /* TODO: rewrite to FSM
-     TODO: drop strcspn, use strlen insted (with possible \r\n in mind) or
-     custom wrapper above fgets or fwrite returning number of bytes read. Using
-     getline() could be pretty convenient, but it requires stupid #define
-     _GNU_SOURCE or explicit POSIX declaration and breaks windows
-     compatibility. Hell why, o why C doesn't have function to read until \n or
-     EOF and still return the number of actual bytes read? Am I missing
-     something? */
-  while (fgets (line, PLAINTEXT_BUF_SIZE, text))
+  while ((read = fread (line, 1, PLAINTEXT_BUF_SIZE, text)))
     {
-      if (pattern)
+      ptr = line;
+      while (ptr < line + read)
         {
-          if (!trail)
+          c = *(ptr++);
+          if (c == '\n' || c == '\r')
             {
-            pattern:
-              current_line_len = strcspn (line, "\n");
-              trail = (current_line_len == PLAINTEXT_BUF_SIZE - 1);
+              if (in_string)
+                {
+                  in_string = false;
+                  if (!in_comment)
+                    {
+                      height++;
+                      width = MAX (width, length);
+                    }
+                }
             }
           else
             {
-              int cspn = strcspn (line, "\n");
-              current_line_len += cspn;
-              trail = (cspn == PLAINTEXT_BUF_SIZE - 1);
+              if (!in_string)
+                {
+                  length = 1;
+                  in_string = true;
+                  in_comment = c == '!';
+                }
+              else
+                length++;
             }
-          if (!trail)
-            {
-              ++linenum;
-              max_line_len = MAX (max_line_len, current_line_len);
-            }
-        }
-      else
-        {
-          if (!trail)
-            {
-              pattern = (line[0] != '!');
-              if (pattern)
-                goto pattern;
-              trail = (strcspn (line, "\n") == PLAINTEXT_BUF_SIZE - 1);
-            }
-          else
-            trail = (strcspn (line, "\n") == PLAINTEXT_BUF_SIZE - 1);
         }
     }
 
-  printf ("max_line_len: %lu\n", max_line_len);
-  printf ("linenum: %lu\n", linenum);
+  printf ("max_line_len: %lu\n", width);
+  printf ("linenum: %lu\n", height);
 
   // TODO: now init BYTESBUFFER with this params
 
