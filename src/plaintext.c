@@ -9,6 +9,9 @@
 
 #define PLAINTEXT_BUF_SIZE 8
 
+/* It's actually buggy, in real Plaintext pattern files from conwaylife.com
+   they use \r\n and we should expect it to measure dimentions of pattern
+   properly */
 BYTESBUFFER_T *
 Plaintext_read (char *path)
 {
@@ -27,6 +30,14 @@ Plaintext_read (char *path)
   bool pattern = false;
   // size_t pattern_begin = 0; /* seek point */
 
+  /* TODO: rewrite to FSM
+     TODO: drop strcspn, use strlen insted (with possible \r\n in mind) or
+     custom wrapper above fgets or fwrite returning number of bytes read. Using
+     getline() could be pretty convenient, but it requires stupid #define
+     _GNU_SOURCE or explicit POSIX declaration and breaks windows
+     compatibility. Hell why, o why C doesn't have function to read until \n or
+     EOF and still return the number of actual bytes read? Am I missing
+     something? */
   while (fgets (line, PLAINTEXT_BUF_SIZE, text))
     {
       if (pattern)
@@ -41,7 +52,7 @@ Plaintext_read (char *path)
             {
               int cspn = strcspn (line, "\n");
               current_line_len += cspn;
-              trail = (cspn == PLAINTEXT_BUF_SIZE);
+              trail = (cspn == PLAINTEXT_BUF_SIZE - 1);
             }
           if (!trail)
             {
@@ -63,8 +74,8 @@ Plaintext_read (char *path)
         }
     }
 
-  printf("max_line_len: %lu\n", max_line_len);
-  printf("linenum: %lu\n", linenum);
+  printf ("max_line_len: %lu\n", max_line_len);
+  printf ("linenum: %lu\n", linenum);
 
   // TODO: now init BYTESBUFFER with this params
 
