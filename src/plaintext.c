@@ -8,9 +8,6 @@
 
 #define PLAINTEXT_BUF_SIZE 8
 
-/* It's actually buggy, in real Plaintext pattern files from conwaylife.com
-   they use \r\n and we should expect it to measure dimentions of pattern
-   properly */
 BYTESBUFFER_T *
 Plaintext_read (char *path)
 {
