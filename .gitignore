@@ -2,6 +2,7 @@
 tags
 hashlife
 *.swp
+*.json
 
 Makefile.in
 aclocal.m4
@@ -21,3 +22,6 @@ src/.deps/
 src/Makefile
 stamp-h1
 *.o
+.cache
+configure~
+
