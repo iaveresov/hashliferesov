@@ -72,46 +72,13 @@ Buffer_set_bit (BYTESBUFFER_T *b, bool value)
     }
 #undef current_byte
 
-  if (b->w / 8 < ++(b->w) / 8)
+  if (b->w / 8 < ((b->w) + 1) / 8) 
     {
       /* reallocate current line if byte border reached */
       b->bytes[b->h] = (BYTE_T *)realloc (b->bytes[b->h],
                                           (b->w / 8 + 1) * sizeof (BYTE_T));
     }
-}
-
-bool
-Buffer_get_bit (BYTESBUFFER_T *b, size_t x, size_t y)
-{
-  BYTE_T req_byte = b->bytes[y][x / 8];
-  switch (x % 8)
-    {
-    case 0:
-      return req_byte.b0;
-      break;
-    case 1:
-      return req_byte.b1;
-      break;
-    case 2:
-      return req_byte.b2;
-      break;
-    case 3:
-      return req_byte.b3;
-      break;
-    case 4:
-      return req_byte.b4;
-      break;
-    case 5:
-      return req_byte.b5;
-      break;
-    case 6:
-      return req_byte.b6;
-      break;
-    case 7:
-      return req_byte.b7;
-      break;
-    };
-  return 0;
+  b->w++;
 }
 
 static void
@@ -271,31 +238,57 @@ Plaintext_read (char *path)
   printf ("max_line_len: %lu\n", max_width);
   printf ("linenum: %lu\n", bytes_buffer->h);
   // min size of line is 8 bits
-  bytes_buffer->w = (max_width > 8) ? (max_width) : (8);
-  // printf ("%zu %zu\n", bytes_buffer->w, bytes_buffer->h);
-
+  int extra_byte = (max_width % 8 == 0) ? 0 : 1;
+  bytes_buffer->w = (max_width / 8 + extra_byte) * 8;
   for (size_t i = 0; i < bytes_buffer->h; ++i)
     {
 
       bytes_buffer->bytes[i] = (BYTE_T *)realloc (
           bytes_buffer->bytes[i], (bytes_buffer->w / 8 + 1) * sizeof (BYTE_T));
     }
-
+  
+  bytes_buffer->w = max_width;
   fclose (text);
   free (stmt);
   free (line);
-
-  for (size_t i = 0; i < bytes_buffer->h; ++i)
-    {
-		printf("line %3zu  ", i + 1);
-      for (size_t j = 0; j < bytes_buffer->w; ++j)
-        {
-          printf ("%d", Buffer_get_bit (bytes_buffer, j, i));
-        }
-      printf ("\n");
-    }
-
   return bytes_buffer;
 }
 
-int Plaintext_get (BYTESBUFFER_T *buf, size_t x, size_t y);
+bool
+Plaintext_get (BYTESBUFFER_T *buf, size_t x, size_t y)
+{
+  if (y > buf->h || x > buf->w)
+    {
+      return 0;
+    }
+
+  BYTE_T req_byte = buf->bytes[y][x / 8];
+  switch (x % 8)
+    {
+    case 0:
+      return req_byte.b0;
+      break;
+    case 1:
+      return req_byte.b1;
+      break;
+    case 2:
+      return req_byte.b2;
+      break;
+    case 3:
+      return req_byte.b3;
+      break;
+    case 4:
+      return req_byte.b4;
+      break;
+    case 5:
+      return req_byte.b5;
+      break;
+    case 6:
+      return req_byte.b6;
+      break;
+    case 7:
+      return req_byte.b7;
+      break;
+    };
+  return 0;
+}

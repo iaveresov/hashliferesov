@@ -1,3 +1,3 @@
 #!/bin/sh
 
-gdb -x debug2.gdb ../src/hashlife
+gdb -x debug3.gdb ../src/hashlife

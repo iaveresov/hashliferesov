@@ -17,6 +17,22 @@ List_prepend (LIST **list, void *value)
   *(list) = node;
 }
 
+LIST *
+List_next (LIST *list)
+{
+  if (list == NULL || list->next == NULL)
+    {
+      return NULL;
+    }
+  return list->next;
+}
+
+void *
+List_get_value (LIST *list)
+{
+  return list->value;
+}
+
 void *
 List_search (LIST *list, bool (*predicate) (void *element, void *load),
              void *load)

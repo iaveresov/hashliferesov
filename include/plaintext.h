@@ -1,6 +1,7 @@
 #ifndef PLAINTEXT_H
 #define PLAINTEXT_H 1
 
+#include<stdbool.h>
 #include <stddef.h>
 
 typedef struct Byte BYTE_T;
@@ -25,7 +26,7 @@ struct BytesBuffer
 };
 
 BYTESBUFFER_T *Plaintext_read (char *path);
-int Plaintext_get (BYTESBUFFER_T *buf, size_t x, size_t y);
+bool Plaintext_get (BYTESBUFFER_T *buf, size_t x, size_t y);
 int Plaintext_free (BYTESBUFFER_T *buf);
 
 #endif /* ifndef PLAINTEXT_H */
