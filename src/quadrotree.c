@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/param.h>
 
 #include "hash.h"
 #include "plaintext.h"
@@ -161,17 +162,21 @@ QTree_get_cell (HASH *hash_table, KEY_T tree, uint64_t x, uint64_t y,
 }
 
 void
-QTree_print (HASH *hash_table, KEY_T tree)
+QTree_print (HASH *hash_table, KEY_T tree, FILE *stream)
 {
+    if(stream == NULL){
+        stream = stdout;
+    }
+
   uint64_t size = 1ULL << LEVEL (tree);
   for (uint64_t i = 0; i < size; ++i)
     {
       for (uint64_t j = 0; j < size; ++j)
         {
             uint64_t cell = QTree_get_cell(hash_table, tree, j, i, 0);
-            printf("%c", cell == 0 ? '.':'O');
+            fprintf(stream, "%c", cell == 0 ? '.':'O');
        }
-      printf ("\n");
+      fprintf (stream, "\n");
     }
 }
 

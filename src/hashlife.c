@@ -26,7 +26,7 @@ void
 usage (char *name)
 {
   printf ("usage:\n"
-          "\t%s read FILE generations\n"
+          "\t%s read IFILE generations [OFILE]\n"
           "\t%s --version|-v\n",
           // TODO: how long could it be?
           name, name);
@@ -51,6 +51,22 @@ main (int argc, char **argv)
         {
           goto error;
         }
+
+      FILE *of = NULL;
+      if (argc == 5)
+        {
+          of = fopen (argv[4], "w");
+
+          printf ("%s\n", argv[4]);
+
+          if (!of)
+            {
+              perror ("hashlife");
+              exit (1);
+            }
+        }
+
+      printf ("test");
       char *endptr;
       uint64_t generations = strtoull (argv[3], &endptr, 10);
 
@@ -59,7 +75,7 @@ main (int argc, char **argv)
       KEY_T qtree_root = QTree_pack (hash_table, buf);
       printf ("\ninit tree\n");
       qtree_root = QTree_centre (hash_table, qtree_root);
-      QTree_print (hash_table, qtree_root);
+      QTree_print (hash_table, qtree_root, NULL);
 
       printf ("init population: "
               "%" PRIu64 "\n",
@@ -71,8 +87,8 @@ main (int argc, char **argv)
 
       clock_t stop = clock ();
 
-      printf ("\nresult after 2^%" PRIu64 " steps\n", generations);
-      QTree_print (hash_table, result);
+      printf ("\nresult after %" PRIu64 " steps\n", generations);
+      QTree_print (hash_table, result, of);
 
       double elapsed_time = ((double)(stop - start)) / CLOCKS_PER_SEC;
       printf ("elapsed_time %.6fs\n", elapsed_time);
