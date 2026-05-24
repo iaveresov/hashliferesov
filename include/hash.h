@@ -22,5 +22,7 @@ void *Hash_get(HASH *hash, KEY_T key);
 size_t Hash_size(HASH *hash);
 size_t Hash_capacity(HASH *hash_table);
 void Hash_resize(HASH **hash);
+void Hash_increase_hits(HASH *hash);
+size_t Hash_get_hits(HASH *hash);
 
 #endif

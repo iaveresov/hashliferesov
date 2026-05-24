@@ -33,6 +33,11 @@ List_get_value (LIST *list)
   return list->value;
 }
 
+size_t List_get_size()
+{
+    return sizeof(struct List);
+}
+
 void *
 List_search (LIST *list, bool (*predicate) (void *element, void *load),
              void *load)

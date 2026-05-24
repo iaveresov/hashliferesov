@@ -54,7 +54,7 @@ QTree_join (HASH *hash_table, KEY_T nw, KEY_T ne, KEY_T sw, KEY_T se)
       if (joined_tree->nw == nw && joined_tree->ne == ne
           && joined_tree->sw == sw && joined_tree->se == se)
         {
-            
+            Hash_increase_hits(hash_table);
           return key;
         }
       KEY_T new_hash = mix64 (key);
@@ -288,6 +288,7 @@ QTree_get_result (HASH *hash_table, KEY_T tree, uint64_t steps)
   if (cached_node && cached_node->source == tree
       && cached_node->steps == steps)
     {
+        Hash_increase_hits(hash_table);
       return cached_node->result;
     }
   return (KEY_T)NULL;
@@ -462,5 +463,4 @@ QTree_make_step (HASH *hash_table, KEY_T tree, uint64_t steps)
   return QTree_crop (hash_table, tree);
 
 }
-
 // void QTree_free(QTREE *tree);

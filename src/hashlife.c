@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <errno.h>
+#include <stdatomic.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -9,9 +10,9 @@
 
 #include "config.h"
 #include "hash.h"
+#include "list.h"
 #include "plaintext.h"
 #include "quadrotree.h"
-#include "queue.h"
 #include "typedefs.h"
 
 #define CMP(str, arg) (memcmp (str, arg, sizeof (str)) == 0)
@@ -28,7 +29,6 @@ usage (char *name)
   printf ("usage:\n"
           "\t%s read IFILE generations [OFILE]\n"
           "\t%s --version|-v\n",
-          // TODO: how long could it be?
           name, name);
 }
 
@@ -91,7 +91,14 @@ main (int argc, char **argv)
       QTree_print (hash_table, result, of);
 
       double elapsed_time = ((double)(stop - start)) / CLOCKS_PER_SEC;
-      printf ("elapsed_time %.6fs\n", elapsed_time);
+      printf ("elapsed time %.6fs\n", elapsed_time);
+      size_t List_size = List_get_size ();
+      size_t Hash_size_fin = Hash_size (hash_table);
+      size_t Hash_capacity_fin = Hash_capacity (hash_table);
+      size_t QTree_size = sizeof (struct QTree);
+      size_t elapsed_memory = (Hash_capacity_fin - Hash_size_fin) * List_size
+                              + Hash_size_fin * (QTree_size + List_size);
+      printf ("elapsed memory %zu bytes", elapsed_memory);
 
       return 0;
     }

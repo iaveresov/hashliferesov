@@ -29,6 +29,7 @@ struct Hash
   LIST **table;
   size_t size;
   size_t capacity;
+  size_t hash_hits;
   HASH_FUNC f;
 };
 
@@ -42,6 +43,18 @@ mix64 (KEY_T key)
   return hash ^ (hash >> 31);
 }
 
+void
+Hash_increase_hits(HASH *hash)
+{
+    hash->hash_hits++;
+}
+
+size_t 
+Hash_get_hits(HASH *hash)
+{
+    return hash->hash_hits;
+}
+
 HASH *
 Hash_init (HASH_FUNC function)
 {
@@ -50,6 +63,7 @@ Hash_init (HASH_FUNC function)
   table->f = function;
   table->size = 0;
   table->capacity = TABLE_SIZE;
+  table->hash_hits = 0;
 
   QTREE *dead_leaf, *live_leaf;
   dead_leaf = (QTREE *)calloc (1, sizeof (QTREE));

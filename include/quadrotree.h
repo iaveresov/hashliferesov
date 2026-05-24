@@ -33,6 +33,7 @@ struct QTree
   uint64_t steps;
 };
 
+inline size_t QTree_size (){return sizeof(struct QTree);}
 KEY_T QTree_join (HASH *hash_table, KEY_T nw, KEY_T ne, KEY_T se, KEY_T sw);
 KEY_T QTree_get_zero (HASH *hash_table, uint64_t level);
 KEY_T QTree_pack (HASH *hash_table, BYTESBUFFER_T *b);
